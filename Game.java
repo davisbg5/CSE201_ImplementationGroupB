@@ -1,10 +1,19 @@
 import java.util.*;
 
+/**
+ * Game class for "Echoes of Innocence"
+ * Handles game flow, rooms, player actions, and events.
+ * 
+ */
 public class Game {
-    private Player player = new Player();
-    private Room currentRoom;
-    private Scanner input = new Scanner(System.in);
+    private Player player = new Player();   // The player
+    private Room currentRoom;               // Current room the player is in
+    private Scanner input = new Scanner(System.in); // Scanner for user input
 
+    /**
+     * Starts the game.
+     * Shows intro, sets initial room, and begins gameplay loop.
+     */
     public void startGame() {
         showIntro();
         currentRoom = new LivingRoom();
@@ -12,6 +21,9 @@ public class Game {
         playRoom(currentRoom);
     }
 
+    /**
+     * Displays the intro story and instructions.
+     */
     private void showIntro() {
         System.out.println("===========================================");
         System.out.println("          ECHOES OF INNOCENCE");
@@ -24,6 +36,12 @@ public class Game {
         input.nextLine();
     }
 
+    /**
+     * Plays a single room.
+     * Handles inspections, moving, inventory, and innocence meter.
+     *
+     * @param room The room to play
+     */
     private void playRoom(Room room) {
         player.resetInspections();
         System.out.println("\n-------------------------------------------");
@@ -58,6 +76,11 @@ public class Game {
         nextRoom(room);
     }
 
+    /**
+     * Handles the inspection of items in a room.
+     *
+     * @param room The room containing items
+     */
     private void handleInspectMenu(Room room) {
         System.out.println("\nSelect an item to inspect:");
         room.listObjectsNumbered();
@@ -86,9 +109,10 @@ public class Game {
             }
         }
 
-        // Inspect the container or standalone item
+        // Inspect the container or stand alone item
         item.inspect(player);
 
+        // Handle container items
         if (item.isContainer()) {
             Item contained = item.peekContainedItem();
             if (contained != null) {
@@ -108,6 +132,11 @@ public class Game {
         player.useInspection();
     }
 
+    /**
+     * Moves to the next room or triggers a chase event if appropriate.
+     *
+     * @param room Current room
+     */
     private void nextRoom(Room room) {
         String next = room.getNextRoomName();
 
@@ -123,6 +152,9 @@ public class Game {
         }
     }
 
+    /**
+     * Handles the chase event outside the room.
+     */
     private void chaseEvent() {
         System.out.println("\nA shadow moves outside the window...");
         System.out.println("Do you chase them?");
@@ -151,6 +183,9 @@ public class Game {
         endGame();
     }
 
+    /**
+     * Handles the end of the game and displays the verdict.
+     */
     private void endGame() {
         narrativePause("\n------------------------------------------");
         System.out.println("       FINAL CASE PRESENTATION");
@@ -182,6 +217,9 @@ public class Game {
         System.out.println("Case Closed.");
     }
 
+    /**
+     * Displays help menu for player actions.
+     */
     private void showHelp() {
         System.out.println("\nHelp Menu:");
         System.out.println("1 = Inspect item");
@@ -191,6 +229,13 @@ public class Game {
         System.out.println("5 = Help");
     }
 
+    /**
+     * Gets a valid number input from the player between min and max.
+     *
+     * @param min Minimum number
+     * @param max Maximum number
+     * @return Valid number entered by player
+     */
     private int getValidNumber(int min, int max) {
         while (true) {
             System.out.print("Enter choice (" + min + "-" + max + "): ");
@@ -205,11 +250,21 @@ public class Game {
         }
     }
 
+    /**
+     * Prints narrative text with a short pause.
+     *
+     * @param text Text to display
+     */
     private void narrativePause(String text) {
         System.out.println(text);
         try { Thread.sleep(1300); } catch (InterruptedException ignored) {}
     }
 
+    /**
+     * Main method to start the game.
+     *
+     * @param args Command line arguments
+     */
     public static void main(String[] args) {
         new Game().startGame();
     }
